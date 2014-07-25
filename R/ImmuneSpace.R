@@ -19,7 +19,7 @@ NULL
 #'If they don't exist, it will use default values. These are assigned to `options`, which are then used by the \code{ImmuneSpaceConnection} class.
 #'@export CreateConnection
 #'@return an instance of an \code{ImmuneSpaceConnection}
-CreateConnection = function(study=NULL){
+CreateConnection = function(study=NULL, .opts = curlOptions()){
   labkey.url.path<-try(get("labkey.url.path",.GlobalEnv),silent=TRUE)
   if(inherits(labkey.url.path,"try-error")){
     if(is.null(study)){
@@ -41,6 +41,7 @@ CreateConnection = function(study=NULL){
   options(labkey.url.base=labkey.url.base)
   options(labkey.url.path=labkey.url.path)
   options(labkey.user.email=labkey.user.email)
+  options(.curlOpts = .opts)
   
   new("ImmuneSpaceConnection")
 }
@@ -88,6 +89,8 @@ setRefClass(Class = "ImmuneSpaceConnection",fields = list(study="character",conf
                                             httpauth=1L,ssl.verifypeer=FALSE,
                                             followlocation=TRUE,verbose=FALSE,
                                             ssl.cipher.list="ALL")
+                oco <- getOption(".curlOpts")
+                curlOptions <- c(oco, curlOptions[!names(curlOptions) %in% names(oco)])
                 study<<-basename(labkey.url.path)
                 config<<-list(labkey.url.base=labkey.url.base,
                               labkey.url.path=labkey.url.path,
