@@ -87,8 +87,7 @@ setRefClass(Class = "ImmuneSpaceConnection",fields = list(study="character",conf
                 labkey.user.email<-getOption("labkey.user.email")
                 curlOptions <- curlOptions(netrc=TRUE,ssl.verifyhost=FALSE,
                                             httpauth=1L,ssl.verifypeer=FALSE,
-                                            followlocation=TRUE,verbose=FALSE,
-                                            ssl.cipher.list="ALL")
+                                            followlocation=TRUE,verbose=FALSE)
                 oco <- getOption(".curlOpts")
                 curlOptions <- c(oco, curlOptions[!names(curlOptions) %in% names(oco)])
                 study<<-basename(labkey.url.path)
