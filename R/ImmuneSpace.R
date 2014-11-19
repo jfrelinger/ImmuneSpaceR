@@ -7,7 +7,7 @@
 #'@name ImmuneSpaceR-package
 #'@aliases ImmuneSpaceR
 #'@author Greg Finak
-#'@import data.table Rlabkey methods Biobase gtools
+#'@import data.table Rlabkey methods Biobase gtools digest
 NULL
 
 .CreateConnection = function(study = NULL
@@ -499,15 +499,16 @@ NULL
         warning(study, " has invalid data set: ",x)
         NULL
       }else{
-        if(!is.null(data_cache[[x]])&!reload){
-          data_cache[[x]]
+	hash_key = digest(c(x,original_view))
+        if(!is.null(data_cache[[hash_key]])&!reload){
+          data_cache[[hash_key]]
         }else{
           viewName <- NULL
           if(original_view){
             viewName <- "full"
           }
           
-          data_cache[[x]] <<- data.table(labkey.selectRows(baseUrl = config$labkey.url.base
+          data_cache[[hash_key]] <<- data.table(labkey.selectRows(baseUrl = config$labkey.url.base
                                                            ,config$labkey.url.path
                                                            ,schemaName = "study"
                                                            , queryName = x
@@ -515,8 +516,8 @@ NULL
                                                            , colNameOpt = "fieldname"
                                                            , ...)
           )
-          setnames(data_cache[[x]],.self$.munge(colnames(data_cache[[x]])))
-          data_cache[[x]]
+          setnames(data_cache[[hash_key]],.self$.munge(colnames(data_cache[[x]])))
+          data_cache[[hash_key]]
         }
       }
     })
