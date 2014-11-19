@@ -516,7 +516,7 @@ NULL
                                                            , colNameOpt = "fieldname"
                                                            , ...)
           )
-          setnames(data_cache[[hash_key]],.self$.munge(colnames(data_cache[[x]])))
+          setnames(data_cache[[hash_key]],.self$.munge(colnames(data_cache[[hash_key]])))
           data_cache[[hash_key]]
         }
       }
